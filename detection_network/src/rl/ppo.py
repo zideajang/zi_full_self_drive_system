@@ -83,5 +83,5 @@ class PPO(object):
                     action_log_probs - torch.from_numpy(adv_targ)
                 )
 
-                
+                adv_targ_th = torch.from_numpy(adv_targ).float()
 
