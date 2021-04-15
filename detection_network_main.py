@@ -17,13 +17,36 @@ class DetectionSegmenter(nn.Module):
 def setup_loggr():
     logger = logging.getLogger(__name__)
 
+defaults_config = {
+    "random_seed":106,
+    "arch_writer":"output/genotypes.out",
+    "num_tasks":10,
+}
+
 
 def main():
     """
     先做训练的控制器
     """
     setup_loggr()
-    logger.info("hello ZiFSD")
+    # logger.info("hello ZiFSD")
+
+
+    # 定义输出结构的文件
+    arch_writer = open(defaults_config["random_seed"],"w")
+    # class_num = 1000
+
+    segmentation_criterion = nn.NLLLoss2d(ignore_index=255).cuda()
+
+
+
+
+    # 搜索空间
+    sample = ((decoder_config),reward,entropy,log_prob)
+
+
+    # 定义智能代理
+    
 
 
 if __name__ == "__main__":
