@@ -3,13 +3,13 @@ import cv2
 
 import numpy as np
 
-from hi_map.src.display import Display
+from hi_map.src.display import Display,Display2
 from hi_map.src.extractor import FeatureExtractor
 
 W = 1920 // 2
 H = 1080 //2 
 
-display = Display(W,H)
+display = Display2(W,H)
 
 fe = FeatureExtractor()
 
@@ -38,3 +38,6 @@ if __name__  == "__main__":
             process_frame(frame)
         else:
             break
+    
+    # cap.release()
+    # cv2.destroyAllWindows()

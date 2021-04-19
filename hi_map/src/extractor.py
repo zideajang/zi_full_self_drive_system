@@ -10,8 +10,11 @@ class FeatureExtractor:
 
         self.last = None
 
+        # 定义检测角点的最大值
         self.kp_count = 3000
+        # 检测特征点的质量等级
         self.quality_level = 0.01
+        # 两个角点间最小距离
         self.min_distance = 3
     def extract(self,frame):
         # 转换图像数据格式
@@ -21,6 +24,8 @@ class FeatureExtractor:
         
         # 提取关键点和描述
         kps = [cv2.KeyPoint(x=f[0][0],y=f[0][1],_size=20) for f in feats]
+        
+        # 计算特征点
         kps, des = self.orb.compute(frame,kps)
 
         # 匹配

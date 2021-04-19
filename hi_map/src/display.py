@@ -2,6 +2,38 @@ import cv2
 import sdl2
 import sdl2.ext
 
+import pygame
+from pygame.locals import *
+
+import numpy as np
+
+class Display2(object):
+
+    def __init__(self,W,H):
+        self.W = W
+        self.H = H
+
+        self.FPS = 60
+        self.screen = pygame.display.set_mode((self.W,self.H))
+
+
+
+    def show(self,frame):
+        self.screen.fill(0)
+        frame = np.rot90(frame)
+        frame = pygame.surfarray.make_surface(frame)
+        self.screen.blit(frame,(0,0))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                pygame.quit()
+                cv2.destroyAllWindows()
+        
+              
+
+        
 
 class Display(object):
 
