@@ -3,13 +3,13 @@ import cv2
 
 import numpy as np
 
-from hi_map.src.display import Display,Display2
+from hi_map.src.display import Display
 from hi_map.src.extractor import FeatureExtractor
 
 W = 1920 // 2
 H = 1080 //2 
 
-display = Display2(W,H)
+display = Display(W,H)
 
 fe = FeatureExtractor()
 
@@ -22,8 +22,8 @@ def process_frame(frame):
     if matches is not None:
         for pt1,pt2 in matches:
             # u,v = map(lambda x:int(round(x)),p.pt)
-            u1,v1 = map(lambda x:int(round(x)),pt1.pt)
-            u2,v2 = map(lambda x:int(round(x)),pt2.pt)
+            u1,v1 = map(lambda x:int(round(x)),pt1)
+            u2,v2 = map(lambda x:int(round(x)),pt2)
             cv2.circle(frame,(u1,v1),color=(0,255,0),radius=3)
             cv2.line(frame,(u1,v1),(u2,v2),color=(255,0,0))
     display.show(frame)

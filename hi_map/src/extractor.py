@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 
+# 
+from skimage.measure import ransac
+from skimage.transform import FundamentalMatrixTransform
+
 class FeatureExtractor:
 
     def __init__(self):
@@ -15,7 +19,7 @@ class FeatureExtractor:
         # 检测特征点的质量等级
         self.quality_level = 0.01
         # 两个角点间最小距离
-        self.min_distance = 3
+        self.min_distance = 2
     def extract(self,frame):
         # 转换图像数据格式
         frame = np.mean(frame,axis=2).astype(np.uint8)
@@ -34,9 +38,21 @@ class FeatureExtractor:
             matches = self.bf.knnMatch(des,self.last['des'],k=2)
             for m,n in matches:
                 if m.distance < 0.75* n.distance:
-                    ret.append ((kps[m.queryIdx],self.last['kps'][m.trainIdx]))
+                    kp1 = kps[m.queryIdx].pt
+                    kp2 = self.last['kps'][m.trainIdx].pt
 
+                    ret.append ((kp1,kp2))
 
+        # filter
+        if len(ret) > 0:
+            ret = np.array(ret)
+            model, inliers = ransac((ret[:,0],ret[:,1]),
+                                    FundamentalMatrixTransform,
+                                    min_samples=8,
+                                    residual_threshold=1,
+                                    max_trials=100)
+            # print(sum(inliers))
+            ret = ret[inliers]
         self.last = {'kps':kps,'des':des}
 
         return ret

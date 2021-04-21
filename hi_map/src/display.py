@@ -16,8 +16,6 @@ class Display2(object):
         self.FPS = 60
         self.screen = pygame.display.set_mode((self.W,self.H))
 
-
-
     def show(self,frame):
         self.screen.fill(0)
         frame = np.rot90(frame)
