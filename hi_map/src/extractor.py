@@ -28,9 +28,12 @@ class FeatureExtractor:
         self.K = K
         self.Kinv = np.linalg.inv(self.K)
     
+    def normalize(self,pts):
+        return np.dot(self.Kinv,add_ones(pts).T).T[:,0:2]        
+
     def denormalize(self,pt):
         # return int(round(pt[0]+frame.shape[0]/2)),int(round(pt[1] + frame.shape[1]/2))
-        ret = np.dot(self.K,np.array([pt[0],pt[1],1.0]).T)
+        ret = np.dot(self.K,np.array([pt[0],pt[1],1.0]))
         print(ret)
         return int(round(ret[0])),int(round(ret[1]))
 
@@ -62,8 +65,10 @@ class FeatureExtractor:
         # filter
         if len(ret) > 0:
             ret = np.array(ret)
-            ret[:,0,:] = np.dot(self.Kinv,add_ones(ret[:,0,:]).T).T[:,0:2]
-            ret[:,1,:] = np.dot(self.Kinv,add_ones(ret[:,1,:]).T).T[:,0:2]
+            # ret[:,0,:] = np.dot(self.Kinv,add_ones(ret[:,0,:]).T).T[:,0:2]
+            # ret[:,1,:] = np.dot(self.Kinv,add_ones(ret[:,1,:]).T).T[:,0:2]
+            ret[:,0,:] = self.normalize(ret[:,0,:])
+            ret[:,1,:] = self.normalize(ret[:,1,:])
             # ret[:,:,0] -= frame.shape[0]//2
             # ret[:,:,1] -= frame.shape[1]//2
             model, inliers = ransac((ret[:,0],ret[:,1]),
