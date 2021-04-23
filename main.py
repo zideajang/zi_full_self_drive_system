@@ -6,15 +6,16 @@ import numpy as np
 from hi_map.src.display import Display
 from hi_map.src.extractor import FeatureExtractor
 
+F = 1
+
 W = 1920 // 2
 H = 1080 //2 
 
 display = Display(W,H)
 
-fe = FeatureExtractor()
+K = np.array([[F,0,W//2],[0,F,H//2],[0,0,1]])
 
-
-
+fe = FeatureExtractor(K)
 
 
 def process_frame(frame):
@@ -24,12 +25,11 @@ def process_frame(frame):
     matches = fe.extract(frame)
     # print(f"{len(matches)}")
     if matches is not None:
-        def denormalize(pt):
-            return int(round(pt[0]+frame.shape[0]/2)),int(round(pt[1] + frame.shape[1]/2))
+        
         for pt1,pt2 in matches:
 
-            u1,v1 = denormalize(pt1)
-            u2,v2 = denormalize(pt2)
+            u1,v1 = fe.denormalize(pt1)
+            u2,v2 = fe.denormalize(pt2)
 
             # u,v = map(lambda x:int(round(x)),p.pt)
             # u1,v1 = map(lambda x:int(round(x)),pt1)
