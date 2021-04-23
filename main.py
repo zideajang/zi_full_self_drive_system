@@ -13,17 +13,27 @@ display = Display(W,H)
 
 fe = FeatureExtractor()
 
+
+
+
+
 def process_frame(frame):
     frame = cv2.resize(frame,(W,H))
     # kp,des = orb.detectAndCompute(frame,None)
     # kp,des,_ = fe.extract(frame)
     matches = fe.extract(frame)
-    print(f"{len(matches)}")
+    # print(f"{len(matches)}")
     if matches is not None:
+        def denormalize(pt):
+            return int(round(pt[0]+frame.shape[0]/2)),int(round(pt[1] + frame.shape[1]/2))
         for pt1,pt2 in matches:
+
+            u1,v1 = denormalize(pt1)
+            u2,v2 = denormalize(pt2)
+
             # u,v = map(lambda x:int(round(x)),p.pt)
-            u1,v1 = map(lambda x:int(round(x)),pt1)
-            u2,v2 = map(lambda x:int(round(x)),pt2)
+            # u1,v1 = map(lambda x:int(round(x)),pt1)
+            # u2,v2 = map(lambda x:int(round(x)),pt2)
             cv2.circle(frame,(u1,v1),color=(0,255,0),radius=3)
             cv2.line(frame,(u1,v1),(u2,v2),color=(255,0,0))
     display.show(frame)

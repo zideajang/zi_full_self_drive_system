@@ -43,9 +43,12 @@ class FeatureExtractor:
 
                     ret.append ((kp1,kp2))
 
+
         # filter
         if len(ret) > 0:
             ret = np.array(ret)
+            ret[:,:,0] -= frame.shape[0]//2
+            ret[:,:,1] -= frame.shape[1]//2
             model, inliers = ransac((ret[:,0],ret[:,1]),
                                     FundamentalMatrixTransform,
                                     min_samples=8,

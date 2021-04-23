@@ -1,3 +1,7 @@
+
+无人驾驶是未来趋势，在我看来答案是肯定的。随着新能源电动车不断普及，以及 5G 技术日益成熟，带有无人驾驶智能汽车必将是一个趋势。不过有些技术还是需要突破，毫米波激光雷达价格，以及是否通过其他、其他方式将像 waymo 头顶笨重的耗电激光雷达换一种形式。通过感知拿到计算机视觉也还有一定发展空间，如何实现多任务学习，提高精度和神经网络的可解释性，这些方面还是一定空间。还有就是无人驾驶相关法规还需要完善，
+
+
 ## 现搭建基础网络
 
 最近比较火 NAS 
@@ -91,3 +95,45 @@ $$\nabla_{\alpha} L_{eval}(w^*(\alpha),\alpha) \approx \nabla_{\alpha}(w - \epsi
 #### 性能评估策略
 NAS 算法需要估计一个给定神经网络结构的性能，这称为性能评估策略
 
+## NAS
+
+尽管大多数流行和经典的神经网络模型的架构都是由人类专家设计出来的，但这并不意味着我们已经探索了整个网络架构空间并确定了最佳方案。到现在为止我们还没有一个确定的方向，或者说是一套理论，通过这套理论可以设计有效的神经网络。还在摸索中，特别参数调试都是在不断摸索查看如何设计或拿到一个好的方案。那么这些繁琐和暴力事情，或者可能其中可能蕴含规律是不是可以交给机器来做，这是 NAS 的初衷，也是大家热捧的动力。
+
+如果我们采用系统化和自动化的方式来学习高性能的模型架构，我们将有更好的机会找到最佳解决方案。
+
+Automatically learning and evolving network topologies is not a new idea (Stanley & Miikkulainen, 2002). In recent years, the pioneering work by Zoph & Le 2017 and Baker et al. 2017 has attracted a lot of attention into the field of Neural Architecture Search (NAS), leading to many interesting ideas for better, faster and more cost-efficient NAS methods.
+
+其实这种自动化的学习并不断优化网络拓扑结构并不是一个新想法（Stanley & Miikkulainen, 2002），也就是最近大家想设计出一个模型，这个模型负责设计出一个网络结构，也可以理解为结构化学习一种。随着近年来，Zoph & Le 2017 和 Baker 等人的开创性工作，这些工作吸引了很多人对神经网络结构搜索(NAS)这个研究领域的更多关注，从而带来了更多有趣的想法，基于这些想法出现了更好、更快、更有成本效益的 NAS 方法。
+
+As I started looking into NAS, I found this nice survey very helpful by Elsken, et al 2019. They characterize NAS as a system with three major components, which is clean & concise, and also commonly adopted in other NAS papers.
+
+当我开始研究 NAS 时，我发现 Elsken, et al 2019 的这份漂亮的调查报告非常有帮助。他们将 NAS 描述为一个有三个主要组成部分的系统，也是其他 NAS 论文中普遍采用的。
+
+NAS search algorithms sample a population of child networks. It receives the child models’ performance metrics as rewards and learns to generate high-performance architecture candidates. You may a lot in common with the field of hyperparameter search.
+
+
+Search space: The NAS search space defines a set of operations (e.g. convolution, fully-connected, pooling) and how operations can be connected to form valid network architectures. The design of search space usually involves human expertise, as well as unavoidably human biases.
+
+**搜索空间**: NAS 的搜索空间定义了一组 tensor 的操作（如卷积、全连接、集合）以及如何将操作连接起来以形成有效的网络结构。搜索空间的设计通常涉及人类的专业知识，这样多少就会收到人类认知所影响。
+
+Search algorithm: A NAS search algorithm samples a population of network architecture candidates. It receives the child model performance metrics as rewards (e.g. high accuracy, low latency) and optimizes to generate high-performance architecture candidates.
+
+**搜索算法**: 一个 NAS 搜索算法对网络架构候选集合进行采样。它接收儿童模型的性能指标作为奖励（如高精确度、低延迟），并进行优化以产生高性能的架构候选者。
+
+**评价策略**: 我们需要测量、估计或预测大量提议的子模型的性能，作为搜索算法的学习的反馈来z。候选人评估的过程可能非常昂贵，许多新的方法已经被提出来以节省时间或计算资源。
+
+The most naive way to design the search space for neural network architectures is to depict network topologies, either CNN or RNN, with a list of sequential layer-wise operations, as seen in the early work of Zoph & Le 2017 & Baker et al. 2017. The serialization of network representation requires a decent amount of expert knowledge, since each operation is associated with different layer-specific parameters and such associations need to be hardcoded. For example, after predicting a conv op, the model should output kernel size, stride size, etc; or after predicting an FC op, we need to see the number of units as the next prediction.
+
+设计神经网络架构的搜索空间的最直观简单方式，是用顺序将神经网络层级，类似链表形式形成的网络拓扑结构，无论是 CNN 还是 RNN，在早期设计出经典神经网络如 AlexNet、VGG 都是这种顺序连接而形成的。网络表示的序列化需要相当数量的专家知识，因为每个 tensor 操作都与其他层的特定参数()相关，例如通过卷积后 tensor 形状发生了改变，为了保持 tensor 形状在整个网络连续性也就是上一层输出是下一层的输入，而且这种关联需要硬编码。例如，要预测连接在卷积后层(操作)，模型应该输出内核大小、跨度大小等；或者在预测一个FC操作后，我们需要看到单位的数量作为下一个预测。
+
+
+
+Inspired by the design of using repeated modules in successful vision model architectures (e.g. Inception, ResNet), the NASNet search space (Zoph et al. 2018) defines the architecture of a conv net as the same cell getting repeated multiple times and each cell contains several operations predicted by the NAS algorithm. A well-designed cell module enables transferability between datasets. It is also easy to scale down or up the model size by adjusting the number of cell repeats.
+
+### Cell-based Representation
+最近神经网络主要主要集中模式识别，也就是空间表现优越的卷积神经网络和时序表现优越的循环神经网络，受经典的视觉任务基于卷积神经网络架构（如Inception、ResNet）的启发，在这些网络中通常都是重复使用一些相同结构，通过堆叠而得到这些网络。
+
+NASNe t搜索空间（Zoph等人，2018）将定卷积网的架构定义为同一个单元得到多次重复，每个单元包含 NAS 算法预测的几个操作。一个精心设计的单元模块能够在数据集之间进行转移。通过调整单元格重复的数量，也很容易缩小或扩大模型的规模。
+
+### 搜索策略
+NAS 搜索算法对一个子网络空间进行采样。将子网络模型的性能指标作为奖励，来学习生成高性能的架构。也适用与超参数搜索领域。
