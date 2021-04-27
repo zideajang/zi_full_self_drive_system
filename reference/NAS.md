@@ -95,19 +95,20 @@ $$\nabla_{\alpha} L_{eval}(w^*(\alpha),\alpha) \approx \nabla_{\alpha}(w - \epsi
 #### 性能评估策略
 NAS 算法需要估计一个给定神经网络结构的性能，这称为性能评估策略
 
+
 ## NAS
 
-尽管大多数流行和经典的神经网络模型的架构都是由人类专家设计出来的，但这并不意味着我们已经探索了整个网络架构空间并确定了最佳方案。到现在为止我们还没有一个确定的方向，或者说是一套理论，通过这套理论可以设计有效的神经网络。还在摸索中，特别参数调试都是在不断摸索查看如何设计或拿到一个好的方案。那么这些繁琐和暴力事情，或者可能其中可能蕴含规律是不是可以交给机器来做，这是 NAS 的初衷，也是大家热捧的动力。
+今天尽管大多数流行和经典的神经网络模型的架构都是由人类的专家设计出来的，但这并不意味着我们已经探索了整个网络架构的空间并确定了最佳方案。到现在为止我们还没有一个确定的方向，或者说是一套理论，通过这套理论可以设计有效的神经网络。还在摸索中，特别参数调试都是在不断摸索查看如何设计或拿到一个好的方案。那么这些繁琐和暴力事情，或者可能其中可能蕴含规律是不是可以交给机器来做，这是 NAS 的初衷，也是大家热捧的动力。
 
 如果我们采用系统化和自动化的方式来学习高性能的模型架构，我们将有更好的机会找到最佳解决方案。
 
 Automatically learning and evolving network topologies is not a new idea (Stanley & Miikkulainen, 2002). In recent years, the pioneering work by Zoph & Le 2017 and Baker et al. 2017 has attracted a lot of attention into the field of Neural Architecture Search (NAS), leading to many interesting ideas for better, faster and more cost-efficient NAS methods.
 
-其实这种自动化的学习并不断优化网络拓扑结构并不是一个新想法（Stanley & Miikkulainen, 2002），也就是最近大家想设计出一个模型，这个模型负责设计出一个网络结构，也可以理解为结构化学习一种。随着近年来，Zoph & Le 2017 和 Baker 等人的开创性工作，这些工作吸引了很多人对神经网络结构搜索(NAS)这个研究领域的更多关注，从而带来了更多有趣的想法，基于这些想法出现了更好、更快、更有成本效益的 NAS 方法。
+其实这种自动化的学习并不断优化网络拓扑结构并不是一个新想法(Stanley & Miikkulainen, 2002)，也就是最近大家想设计出一个模型，这个模型负责设计出一个网络结构，也可以理解为结构化学习一种。随着近年来，Zoph & Le 2017 和 Baker 等人的开创性工作，这些工作吸引了很多人对神经网络结构搜索(NAS)这个研究领域的更多关注，从而带来了更多有趣的想法，基于这些想法出现了更好、更快、更有成本效益的 NAS 方法。
 
 As I started looking into NAS, I found this nice survey very helpful by Elsken, et al 2019. They characterize NAS as a system with three major components, which is clean & concise, and also commonly adopted in other NAS papers.
 
-当我开始研究 NAS 时，我发现 Elsken, et al 2019 的这份漂亮的调查报告非常有帮助。他们将 NAS 描述为一个有三个主要组成部分的系统，也是其他 NAS 论文中普遍采用的。
+当我开始研究 NAS 时，看到 Elsken, et al 在 2019 发表那份漂亮的调查报告，这个调查报告对 NAS 的理解非常有帮助。他们将 NAS 描述为一个有三个主要组成部分的系统，也是其他 NAS 论文中普遍采用的。
 
 NAS search algorithms sample a population of child networks. It receives the child models’ performance metrics as rewards and learns to generate high-performance architecture candidates. You may a lot in common with the field of hyperparameter search.
 
