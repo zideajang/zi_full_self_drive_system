@@ -1,6 +1,228 @@
 
 
+
+
+
+
+计算机成像是将 3D 世界物体映射到一个 2D 的世界，我们看到都是 2D 画面，但是我们可以通过 2D 画面的一些透视效果和学习到先验将 2D 图像还原到一个 3D 场景，今天我们就来看一看计算机是如何做到这些的。
+
+
+
+<img src="computer_vision_01/032.png">
+
+### 2D 变换
+
+#### 等距变换(Transalation)
+
+就是把平面上的点经过**平移**、**旋转**后变换为另一个点，其中保持长度、面积、方向、角度(旋转变换)、平行关系、还保持两条直线间的夹角不变。
+$$
+\begin{bmatrix}
+
+ x^{\prime}\\
+
+​    y^{\prime}\\
+
+​    1
+
+  \end{bmatrix} = \begin{bmatrix}
+
+​    R & t\\
+
+​    0 & 1
+
+  \end{bmatrix} \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+  \end{bmatrix} = H_e \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+  \end{bmatrix}
+$$
+
+$$
+\begin{bmatrix} 1 & 0 & t_x\\ 0 & 1 & t_y \\ 0 & 0 & 1 \end{bmatrix} or \begin{bmatrix} I & t \\ 0^T & 1 \end{bmatrix} or  \begin{bmatrix} I | t\end{bmatrix}_{2 \times 3}
+$$
+
+
+
+
+
+- 3 DOF(自由度)
+
+- 刚性物体的运动
+
+$$
+\begin{bmatrix}
+ \cos \theta & -  \sin \theta\\
+ \sin \theta &   \cos \theta \\
+\end{bmatrix}\begin{bmatrix}
+ \cos \theta &   \sin \theta\\
+ -\sin \theta &   \cos \theta \\
+\end{bmatrix} 
+$$
+
+
+
+##### 正交矩阵
+
+$$
+A^TA = AA^T = E
+$$
+
+- 正交
+
+#### 相似变换(Similar)
+
+相似变换就是在等距变换上加了 S 矩阵，长度的比值和角度不变，保持直线的平行关系、以及夹角
+
+
+$$
+\begin{bmatrix}
+
+x^{\prime}\\
+
+y^{\prime}\\
+
+1
+
+\end{bmatrix} = \begin{bmatrix}
+
+SR & t\\
+
+0 & 1
+
+\end{bmatrix} \begin{bmatrix}
+
+x\\
+
+y\\
+
+1
+
+\end{bmatrix} = H_s \begin{bmatrix}
+
+x\\
+
+y\\
+
+1
+
+\end{bmatrix} S = \begin{bmatrix}
+
+ s & 0\\
+
+0 & s
+
+\end{bmatrix}
+$$
+
+$$
+\begin{bmatrix}
+s \cos \theta & - s \sin \theta & t_x\\
+s \sin \theta &  s \cos \theta & t_x\\
+0 & 0 & 1
+\end{bmatrix} or \begin{bmatrix} sR & t \\ 0^T 1\end{bmatrix}
+$$
+
+
+- 这里 sR 矩阵应该正交矩阵
+
+- 4 DOF(自由度)
+
+#### 仿射变换(Affine)
+
+保持平行线间的平行关系、面积比值的不变性，直线间夹角发生了变化。
+$$
+\begin{bmatrix}
+
+​    x^{\prime}\\
+
+​    y^{\prime}\\
+
+​    1
+
+\end{bmatrix} = \begin{bmatrix}
+
+​    A & t\\
+
+​    0 & 1
+
+\end{bmatrix} \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+\end{bmatrix} = H_a \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+\end{bmatrix}
+$$
+
+
+
+
+- 仿射变换对于 A 矩阵没有什么要求
+
+- 6 DOF(自由度)
+
+#### 射影变换(Projective)
+
+
+$$
+\begin{bmatrix}
+
+​    x^{\prime}\\
+
+​    y^{\prime}\\
+
+​    1
+
+\end{bmatrix} = \begin{bmatrix}
+
+​    A & t\\
+
+​    v & 1
+
+\end{bmatrix} \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+\end{bmatrix} = H_a \begin{bmatrix}
+
+​    x\\
+
+​    y\\
+
+​    1
+
+\end{bmatrix} 
+$$
+直线还是直线，保留不变非常有限。
+
 ### 摄像机视觉
+
 - 小孔成像
 - 针孔摄像机
 - 凸透镜
@@ -44,7 +266,7 @@ $$p = \begin{bmatrix}
 <img src="./computer_vision_01/008.jpg">
 
 - 凸透镜将多条光线聚焦到胶片上，增加了照片的亮度
-  
+
 <img src="./computer_vision_01/009.jpeg">
 
 - 凸透镜将光线聚焦到胶片上
@@ -75,7 +297,7 @@ $$\begin{gathered}
     \beta = fl
 \end{gathered}$$
 
-- 空间点到像素单位，三维点到像素点的映射。
+- 空间点到 像素单位，三维点到像素点的映射。
 - 空间点 p 到图像点 $p^{\prime}$ 的变换是线性变换
 
 $$p(x,y,z) \rightarrow p^{\prime} = \left( \alpha\frac{x}{z}+c_x,\beta\frac{y}{z} + c_y \right)$$
@@ -178,7 +400,8 @@ $$p = \begin{bmatrix}
 \end{bmatrix}$$
 
 
-$$ p^{\prime} = K \begin{bmatrix}
+
+$$ `p^{\prime} = K \begin{bmatrix}
     I & 0
 \end{bmatrix} p =  K \begin{bmatrix}
     I & 0
@@ -187,7 +410,7 @@ $$ p^{\prime} = K \begin{bmatrix}
     0 & 1
 \end{bmatrix} p_w \ = K \begin{bmatrix}
     R & T
-\end{bmatrix} p_w = MP_w$$
+\end{bmatrix} p_w = MP_w`$$
 
 $$\begin{aligned}
     K_{3 \times 3}\\

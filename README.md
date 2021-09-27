@@ -9,7 +9,7 @@
 - 车道线检测 lane detection
 - 不知道这个项目会喝掉多少杯咖啡
 - 多任务神经网络
-
+10.1.0.67:5600
 ```python
 conda create -n py36 python==3.6
 opencv

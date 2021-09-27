@@ -22,10 +22,11 @@ def fectch(url):
     # print(fp)
 
     if os.path.isfile(fp):
+        print("exist")
         with open(fp,"rb") as f:
             dat = f.read()
     else:
-        # print("hello")
+        print("hello")
         with open(fp,"wb") as f:
             dat = requests.get(url).content
             f.write(dat)
@@ -43,10 +44,14 @@ if __name__ == "__main__":
     # download data
     X_train = fectch("http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz")[0x10:].reshape((-1,28,28))
     # print(X_train.shape)
-    Y_train = fectch("http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz")[8:]
+    # Y_train = fectch("http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz")[8:]
     # print(Y_train.shape)
-    X_test = fectch("http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz")[0x10:].reshape((-1,28,28))
-    Y_test = fectch("http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz")[8:]
+    # X_test = fectch("http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz")[0x10:].reshape((-1,28,28))
+    # Y_test = fectch("http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz")[8:]
+
+    print(X_train.shape)
+
+    """
 
     model = ZiNet()
 
@@ -59,6 +64,9 @@ if __name__ == "__main__":
     batch_size = 32
 
     t = trange(100)
+
+    print("hello...")
+    print(X_train.shape)
 
     for i in  t:
         samp = np.random.randint(0,X_train.shape[0],size=(batch_size))
@@ -76,4 +84,4 @@ if __name__ == "__main__":
         t.set_description("loss %.2f accuracy %.2f" % (loss.item(),accuracy.item()))
         t.refresh()
 
-    
+    """

@@ -40,14 +40,16 @@ def process_frame(frame):
 
 
 if __name__  == "__main__":
-    cap = cv2.VideoCapture("clip/countryroad.mp4")
+    # cap = cv2.VideoCapture("clip/countryroad.mp4")
+    cap = cv2.VideoCapture("video/test_video1.mp4")
 
     while cap.isOpened():
         ret,frame = cap.read()
         if ret == True:
-            process_frame(frame)
+            cv2.imshow("frame",frame)
+            # process_frame(frame)
         else:
             break
     
-    # cap.release()
-    # cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
